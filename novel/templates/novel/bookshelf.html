@@ -1,0 +1,91 @@
+﻿{% extends "./base.html" %}
+
+{% load pag %}
+{% block mystyle %}
+<style type="text/css">
+    body {
+        background-color: #fff;
+    }
+</style>
+{% endblock mystyle %}
+{% block content %}
+<!-- chapter and comment -->
+<div class="table-responsive">
+    <p class="reg-gray-bar">&nbsp;&nbsp;&nbsp;&nbsp;藏书数 <span style="">{{ bookshelf.paginator.count }}</span></p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>类别</th>
+                <th>书名</th>
+                <th>作者</th>
+                <th>加入时间</th>
+                <th>删除</th>
+            </tr>
+        </thead>
+
+        {% if bookshelf %}
+        <tbody>
+            <div class="row">
+                {% for bksf in bookshelf %}
+                <tr>
+                    <td>{{ bksf.book.category }}</td>
+                    <td><a href="{% url 'novel:chapterlist' bksf.book.name_id %}">{{ bksf.book.xs_name }}</a></td>
+                    <td>{{ bksf.book.xs_author }}</td>
+                    <td>{{ bksf.time }}</td>
+                    <td><button class="btn btn-danger btndelete" data-bid="{{ bksf.id }}">删除</button></td>
+                </tr>
+                {% endfor %}
+            </div>
+            {% csrf_token %}
+        </tbody>
+        {% endif %}
+
+    </table>
+    <!--分页-->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if bookshelf.number != 1 %}
+            <li><a href="{% url 'novel:bookshelf' %}?page=1" data-toggle="tooltip" data-placement="bottom" title="首页"><<</a></li>
+            <li>
+                <a href="{% url 'novel:bookshelf' %}?page={{ bookshelf.previous_page_number }}" aria-label="Previous" data-toggle="tooltip" data-placement="bottom" title="上一页">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if bookshelf.paginator.num_pages != 1 %}
+            {% for page_num in bookshelf.paginator.page_range %}
+            {% custom_page bookshelf.number page_num %}
+            {% endfor %}
+            {% endif %}
+
+            {% if bookshelf.number != bookshelf.paginator.num_pages %}
+            <li>
+                <a href="{% url 'novel:bookshelf' %}?page={{ bookshelf.next_page_number }}" data-toggle="tooltip" data-placement="bottom" title="下一页" " aria-label="Next">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+            <li><a href="{% url 'novel:bookshelf' %}?page={{ bookshelf.paginator.num_pages }}" data-toggle="tooltip" data-placement="bottom" title="尾页">>></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <!--/分页-->
+</div>
+<!-- /chapter and comment -->
+{% endblock %}
+{% block myscript %}
+<script type="text/javascript">
+    $(".btndelete").click(function (e) {
+        var thisE = $(e.currentTarget).parent().parent();//更改目标
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        var bid = $(this).data('bid')
+        var $formData = new FormData();
+        $formData.append("bid", bid);
+        myajax("{% url 'novel:bookshelf' %}", $formData, csrftoken, function (data) {
+            if (parseInt(data.status) == 1) {
+                thisE.fadeOut();
+            }
+        });
+    })
+</script>
+{% endblock %}

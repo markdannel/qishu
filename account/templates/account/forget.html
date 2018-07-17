@@ -1,0 +1,62 @@
+﻿{% extends "../novel/base.html" %}
+
+{% load static %}
+
+{% block mystyle %}
+<style type="text/css">
+
+    .lang {
+        font-family: FZZCYSK;
+        font-weight: 400;
+    }
+
+    h3.wrap-title {
+        border-bottom: 1px solid #666;
+    }
+
+    .myrow {
+        height: 32px;
+        display: flex;
+        align-items: center;
+    }
+
+        .myrow a {
+            border-top: 1px solid #e6e6e6;
+            width: 100%;
+        }
+
+    .label {
+        padding: .2em .4em .2em;
+        min-width: 18px;
+    }
+</style>
+{% endblock mystyle %}
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading"><h3><span class="glyphicon glyphicon-lock"></span> 账户安全中心</h3></div>
+    <p class="reg-orange-bar">&nbsp;&nbsp;&nbsp;&nbsp;密码找回</p>
+    <div class="panel-body" style="min-height:500px;text-align:center;">
+        <form method="post" action="{% url 'account:forget_pwd' %}">
+            <br />
+            <div class="row">
+                <p class="col-md-4 myright">邮箱</p>
+                <p class="col-md-4 myleft"><input type="text" name="email" placeholder="请输入邮箱"></p>
+                <p class="col-md-4 myleft myred">{{forget_form.errors.email}}</p>
+            </div>
+            <br />
+            <div class="row">
+                <p class="col-md-4 myright">验证码</p>
+                <p class="col-md-4 myleft">{{ forget_form.captcha }}</p>
+                <p class="col-md-4 myleft myred">{{forget_form.errors.captcha}}</p>
+            </div>
+            <br />
+            <div class="row">
+                <p class="col-md-4 myright"></p>
+                <p class="col-md-4 myleft"><input type="submit" value="确认发送验证邮件" class="btn btn-danger"></p>
+            </div>
+            {% csrf_token %}
+        </form>
+    </div>
+</div>
+{% endblock %}
+

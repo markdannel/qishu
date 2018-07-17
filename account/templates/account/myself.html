@@ -1,0 +1,86 @@
+﻿{% extends "../novel/base.html" %}
+
+{% load static %}
+
+{% block mystyle %}
+<style type="text/css">
+
+    .lang {
+        font-family: FZZCYSK;
+        font-weight: 400;
+    }
+
+    h3.wrap-title {
+        border-bottom: 1px solid #666;
+    }
+
+    li, ol, ul {
+        list-style: none outside none;
+        -webkit-padding-start: 0px;
+    }
+
+    .myrow {
+        height: 32px;
+        display: flex;
+        align-items: center;
+    }
+
+        .myrow a {
+            border-top: 1px solid #e6e6e6;
+            width: 100%;
+        }
+
+    .label {
+        padding: .2em .4em .2em;
+        min-width: 18px;
+    }
+</style>
+{% endblock mystyle %}
+{% block content %}
+
+<form class="form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="{{ request.session.userid }}" required="" id="id_id">
+    <div class="form-group">
+        <label for="id_name">名称</label>
+        <input type="text" class="form-control" name="name" value="{{user.name}}" maxlength="128" required="" id="id_name" placeholder="名称">
+    </div>
+    <div class="form-group">
+        <label for="id_phone">手机号</label>
+        <input type="text" class="form-control" name="phone" value="{{user.phone}}" maxlength="128" required="" id="id_phone" placeholder="手机号">
+    </div>
+    <div class="form-group">
+        <label for="id_email">邮箱</label>
+        <input type="email" class="form-control" name="email" value="{{user.email}}" maxlength="128" required="" id="id_email" placeholder="邮箱">
+    </div>
+    <div class="form-group">
+        <label for="id_sex">性别</label>
+        <label class="radio-inline">
+            <input type="radio" name="sex" id="id_sex" value="1" {% if user.sex == 1 %}checked{% endif %}> 男
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="sex" id="id_sex2" value="2" {% if user.sex == 2 %}checked{% endif %}> 女
+        </label>
+    </div>
+    <div class="form-group">
+        <label for="id_birth">出生日期</label>
+        <input type="date" class="form-control" name="birth" value="{{user.birth | date:'Y-m-d'}}" id="id_birth" placeholder="出生日期">
+    </div>
+    <div class="form-group">
+        <label for="id_personalized_signature">个性签名</label>
+        <input type="text" class="form-control" name="personalized_signature" value="{{user.personalized_signature}}" maxlength="128" required="" id="id_personalized_signature" placeholder="个性签名">
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">提交</button>
+</form>
+{% endblock %}
+
+{% block myscript %}
+<script>
+    $(function () {
+        var date = "{{ user.birth }}"
+        console.log(date, new Date(date))
+    })
+</script>
+{% endblock myscript %}
+

@@ -1,0 +1,2 @@
+{{ object.xs_chaptername }}
+{{ object.xs_content }}

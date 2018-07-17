@@ -1,0 +1,37 @@
+﻿{% extends "../novel/base.html" %}
+
+{% load static %}
+
+{% block mystyle %}
+
+{% endblock mystyle %}
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading"><h3><span class="glyphicon glyphicon-lock"></span> 账户安全中心</h3></div>
+    <p class="reg-orange-bar">&nbsp;&nbsp;&nbsp;&nbsp;重置密码</p>
+    <div class="panel-body" style="min-height:500px;text-align:center;">
+        <form method="post" action="{% url 'account:modify' %}">
+            <br />
+            <div class="row">
+                <p class="col-md-4 myright">新密码</p>
+                <p class="col-md-4 myleft"><input type="password" name="newpwd1" placeholder="至少输入8位"></p>
+                <p class="col-md-4 myleft myred">{{msg.newpwd1}}</p>
+            </div>
+            <br />
+            <div class="row">
+                <p class="col-md-4 myright">确认新密码</p>
+                <p class="col-md-4 myleft"><input type="password" name="newpwd2" placeholder="至少输入8位"></p>
+                <p class="col-md-4 myleft myred">{{msg.newpwd2}}{% if msg.newpwd1 == None and msg.newpwd2 == None %}{{ msg }}{% endif %}</p>
+            </div>
+            <br />
+            <input type="hidden" name="email" value="{{ email }}">
+            <div class="row">
+                <p class="col-md-4 myright"></p>
+                <p class="col-md-4 myleft"><input type="submit" value="确认" class="btn btn-danger"></p>
+            </div>
+            {% csrf_token %}
+        </form>
+    </div>
+</div>
+{% endblock %}
+

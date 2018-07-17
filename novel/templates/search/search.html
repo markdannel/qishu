@@ -1,0 +1,59 @@
+﻿{% extends '../novel/base.html' %}
+
+{% load highlight %}
+{% load pag %}
+{% block mystyle %}
+<style>
+    body {
+        background-color: #fff !important;
+    }
+    .row {
+        margin: 0;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<form method="get" action="." class="form-inline">
+    <div class="form-group center" style="width:100%;text-align:center">
+        <input type="search" class="form-control" name="q" value="{% if query %}{{query}}{% endif %}" id="id_q" style="width:360px">
+        <button type="submit" class="btn btn-danger" value="Search"> 搜索 </button>
+    </div>
+
+    {% if query %}
+
+    {% for result in page.object_list %}
+    <div class="row">
+        <p style="font-size:20px">
+            <a href="{% url 'novel:chapterlist' result.object.name_id %}">{{ result.object.xs_name }}</a>
+        </p>
+        <p>
+            {{ result.object.xs_author }} | {{ result.object.category }}
+            <span style="float:right"><button type="button" class="btn btn-danger ckxq" data-nameid="{{ result.object.name_id }}"> 查看详情 </button></span>
+        </p>
+    </div>
+    <hr />
+    {% empty %}
+    <p>没有找到相关的内容</p>
+    {% endfor %}
+    {% if page.has_previous or page.has_next %}
+        <div>
+            {% if page.has_previous %}<a href="?q={{ query }}&page={{ page.previous_page_number }}">{% endif %}« Previous{% if page.has_previous %}</a>{% endif %}
+            |
+            {% if page.has_next %}<a href="?q={{ query }}&page={{ page.next_page_number }}">{% endif %}Next »{% if page.has_next %}</a>{% endif %}
+        </div>
+    {% endif %}
+    {% else %}
+    {# Show some example queries to run, maybe query syntax, something else? #}
+    {% endif %}
+</form>
+{% endblock %}
+
+{% block myscript %}
+<script type="text/javascript">
+    $(".ckxq").click(function () {
+        var id = $(this).data("nameid")
+        console.log(id)
+        window.location.href = "/novel/"+id;
+    })
+</script>
+{% endblock %}

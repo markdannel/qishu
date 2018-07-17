@@ -1,0 +1,175 @@
+﻿{% extends "./base.html" %}
+{% load static %}
+
+{% block title %}{{ book.xs_name }}{% endblock %}
+
+{% block mystyle %}
+<style type="text/css">
+    .row div {
+        height: 40px;
+        border-bottom: 1px solid #ebebeb;
+        display: flex;
+        align-items: center;
+    }
+</style>
+{% endblock mystyle %}
+
+
+
+{% block bodytop %}
+<!-- title img -->
+<!--<div style="width:100%">
+    <div class="top-bg-box " id="j-topBgBox" style="background-image:url('//qidian.qpic.cn/qidian_common/349573/9c6d15529ff22ca50f88f9baa180646b/0')">
+        <span class="back-to-op" data-eid="qd_G106">热门游戏</span>
+    </div>
+</div>-->
+<div class="row" style="margin-top: -43px;">
+    <img src="{{ ad.value}}" style="width:100%;display:inline;" />
+</div>
+{% endblock bodytop %}
+
+
+
+{% block content %}
+
+<div style="background: hsla(0,0%,100%,.3);">
+    <ol class="breadcrumb" style="margin-top: -140px;">
+        <li><a href="#" onClick='javascript:history.go(-1)'>首页</a></li>
+        <li class="active">{{ book.xs_name }}</li>
+    </ol>
+</div>
+
+<div class="book-information cf" style="width:100%;">
+    <div class="book-img col-md-3">
+        {% if book.pic %}<img src="/media/Imag/book/{{ book.pic }}" style="max-width: 120%;" />
+        {% else %}<img src="/media/Imag/book/moren.jpg" style="max-width: 120%;" />{% endif %}
+    </div>
+
+    <div class="col-md-9 book-info" style="width:75%">
+        <h1>
+
+            <em>{{ book.xs_name }}</em>
+            <span class="writer"><a href="#" id="chapdata" data-bid="{{ book.id }}" target="_blank">{{ book.xs_author }}</a> 著</span>
+
+        </h1>
+        <p class="tag">
+            <span class="blue">{{ book.category }}</span>
+
+        </p>
+
+        <p class="intro">{% if book.summery %}{{ book.summery }} {% else %}修仙觅长生，热血任逍遥，踏莲曳波涤剑骨，凭虚御风塑圣魂！{% endif %}</p>
+
+        <p>
+            <button type="button" id="btnread" class="btn btn-danger">免费试读</button>
+            <button type="button" class="btn btn-danger" id="savbookshelf" style="margin-left:30px"> 加入书架 </button>
+            <form>
+                {% csrf_token %}
+            </form>
+        </p>
+
+    </div>
+
+</div>
+
+<!-- 看书进度  -->
+        {% if bookshelf %}
+<div style="width:100%" id="divprocess">
+    <p style="text-align: center;" class="reading-track">
+        <a class="btn btn-warning" href="{% url 'novel:content' book.name_id bookshelf.chapter %}" id="btnprocess">
+            您已看到：
+            {% if bookshelf.chaptername %}{{ bookshelf.chaptername }}
+            {% else %} 第一章
+            {% endif %}
+        </a>
+    </p>
+</div>
+        {% endif %}
+
+<!-- chapter and comment -->
+<div>
+    <ul id="chapterTabs" class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">&nbsp;&nbsp;目  录 &nbsp;&nbsp;</a></li>
+        <li role="presentation" class=""><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">&nbsp;&nbsp;评  论&nbsp;&nbsp;</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content" style="background-color:#fff">
+        <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
+            {% if novel %}
+            <div class="row">
+                {% for novel2 in novel %}
+                <div class="col-md-4" style="padding-left:3%"><a class="novelitem" href="{% url 'novel:content' novel2.id_name novel2.num_id %}">{{ novel2.xs_chaptername }}</a></div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>该书目前没有更新，去看看其他的吧~</p>
+            {% endif %}
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+            <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+
+{% block myscript %}
+<script type="text/javascript">
+    $("#btnread").click(function (e) {
+        var url = $("#btnprocess").attr('href') || $(".novelitem:first").attr('href') || '#';
+        window.location.href = url;
+    })
+    $("#savbookshelf").on('click', function (e) {
+        e.preventDefault();
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        var bid = $("#chapdata").data("bid")
+        console.log(csrftoken);
+        var $formData=new FormData();
+        $formData.append("bid",bid);
+        $formData.append("bname", "{{ book.xs_name }}");
+
+        $.ajax({
+            url:"{%  url 'novel:chapterlist' book.id %}",
+            type:"POST",
+            data:$formData,
+            contentType:false,
+            processData:false,
+            headers:{"X-CSRFToken":csrftoken},
+            success:function (data) {
+                console.log(data, data.status)
+                if (parseInt(data.status) == 1) {
+                    $("#savbookshelf").text("已在书架")
+                    $("#savbookshelf").attr("disabled", true)
+                }
+                else alert("加入书架失败,请先登录！");
+            }
+        })
+    })
+
+    $(function(){
+        /* if bookshelf exit, change the btn value ....*/
+        var bookshelfid = "{{ bookshelf.id }}"
+        if (bookshelfid != null && bookshelfid != undefined && bookshelfid != "") {
+            var bchapter = parseInt("{{ bookshelf.chapter }}");
+            console.log('bchapter = ', bchapter);
+            $("#savbookshelf").text("已在书架")
+            $("#savbookshelf").attr("disabled", true)
+            $("#btnread").text("继续阅读")
+            /* if novelitem is null, set the continue btn to disable */
+            var url = $(".novelitem:first").attr('href') || '#';
+            var val = $(".novelitem:first").text();
+            console.log('url = ', url, 'val = ', val);
+            if (bchapter == 1) {
+                console.log('in');
+                $("#btnprocess").attr('href', url);
+                $("#btnprocess").text("您已读到："+val);
+            }
+            if (url == null || url == undefined || url == "" || url == "#") {
+                $("#divprocess").css('display', 'none');
+                $("#btnread").text("开始阅读");
+            }
+        }
+    })
+</script>
+{% endblock myscript %}
+

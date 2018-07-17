@@ -1,0 +1,3 @@
+{{ object.xs_name }}
+{{ object.xs_author }}
+{{ object.category }}

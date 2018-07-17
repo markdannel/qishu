@@ -1,0 +1,77 @@
+﻿{% extends './base.html' %}
+
+{% load highlight %}
+{% load pag %}
+{% block mystyle %}
+<style>
+    body {
+        background-color: #fff !important;
+    }
+
+    .row {
+        margin: 0;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+{% if novel %}
+<p class="reg-gray-bar">&nbsp;&nbsp;&nbsp;&nbsp;书籍数 {{ novel.paginator.count }}</p>
+{% for item in novel %}
+<div class="row">
+    <p style="font-size:20px">
+        <a href="{% url 'novel:chapterlist' item.name_id %}">{{ item.xs_name }}</a>
+    </p>
+    <p>
+        {{ item.xs_author }} | {{ item.category }}
+        <span style="float:right"><button type="button" class="btn btn-danger ckxq" data-nameid="{{ item.name_id }}"> 查看详情 </button></span>
+    </p>
+</div>
+<hr />
+{% empty %}
+<p>该类别还没有小说哦~.</p>
+{% endfor %}
+{% endif %}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if novel.number != 1 %}
+        <li><a href="{% url 'novel:morenovel' %}?ctg={{ ctg }}&page=1" data-toggle="tooltip" data-placement="bottom" title="首页"><<</a></li>
+        <li>
+            <a href="{% url 'novel:morenovel' %}?ctg={{ ctg }}&page={{ novel.previous_page_number }}" aria-label="Previous" data-toggle="tooltip" data-placement="bottom" title="上一页">
+                <span aria-hidden="true">«</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for page_num in novel.paginator.page_range %}
+        {% ctg_page novel.number page_num ctg %}
+        <!-- from 1 to end 全页数 -->
+        <!--{% if page_num == novel.number %}
+        <li class="active"><a href="?ctg={{ ctg }}&page={{ page_num }}">{{page_num}}</a> </li>
+        {% else %}
+        <li class=""><a href="?ctg={{ ctg }}&page={{ page_num }}">{{page_num}}</a> </li>
+        {% endif %}-->
+        {% endfor %}
+
+        {% if novel.number != novel.paginator.num_pages %}
+        <li>
+            <a href="{% url 'novel:morenovel' %}?ctg={{ ctg }}&page={{ novel.next_page_number }}" data-toggle="tooltip" data-placement="bottom" title="下一页" aria-label="Next">
+                <span aria-hidden="true">»</span>
+            </a>
+        </li>
+        <li><a href="{% url 'novel:morenovel' %}?ctg={{ ctg }}&page={{ novel.paginator.num_pages }}" data-toggle="tooltip" data-placement="bottom" title="尾页">>></a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% endblock %}
+
+{% block myscript %}
+<script type="text/javascript">
+    $(".ckxq").click(function () {
+        var id = $(this).data("nameid")
+        window.location.href = "/novel/" + id;
+    })
+</script>
+{% endblock %}

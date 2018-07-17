@@ -1,0 +1,117 @@
+﻿{% extends "./base.html" %}
+{% load static %}
+
+{% block title %}{{ book.xs_name }}{% endblock %}
+
+{% block mystyle %}
+<!-- Custom styles for this template -->
+<link href="{% static 'novel/css/jumbotron-narrow.css' %}" rel="stylesheet">
+<style type="text/css">
+    br {
+        line-height: 46px;
+    }
+
+    body {
+        background-size: 100% 100%;
+        background-attachment: fixed;
+    }
+
+        body:before {
+            background: url('{% static 'novel/bg111.jpg' %}') no-repeat;
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1; /*-1 可以当背景*/
+            -webkit-filter: blur(3px);
+            filter: blur(3px);
+        }
+
+    .backg {
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #f1e8c7;
+        min-width: 800px;
+    }
+</style>
+{% endblock mystyle %}
+
+
+
+{% block content %}
+<ol class="breadcrumb">
+    <li><a href="{% url 'novel:index' %}">首页</a></li>
+    <li><a href="{% url 'novel:chapterlist' content.id_name %}">{{ book.xs_name }}</a></li>
+    <li class="active">{{ content.xs_chaptername }}</li>
+</ol>
+
+<div>
+    <br />
+    {% if content %}
+        <div class="">
+            <h2 style="text-align:center">{{ content.xs_chaptername }}</h2><br /><br />
+            <div class="novel-content">{{ content.xs_content | cut:'顶点小说'| cut:'Ｘ'|cut:'２３ＵＳ'|cut:'．ＣＯＭ'|cut:'更新最快' | linebreaks }}</div><br /><br />
+        </div>
+        <div class="row">
+            <div class="col-md-4 textaligncenter"><button type="button" class="btn btn-danger" id="btnprechap"> &nbsp;&nbsp;&nbsp;&nbsp;上一章&nbsp;&nbsp;&nbsp;&nbsp;</button></div>
+            <div class="col-md-4 textaligncenter"><button type="button" class="btn btn-danger" id="btnmenu">    &nbsp;&nbsp;&nbsp;&nbsp;目录&nbsp;&nbsp;&nbsp;&nbsp;</button></div>
+            <div class="col-md-4 textaligncenter"><button type="button" class="btn btn-danger" id="btnnextchap">&nbsp;&nbsp;&nbsp;&nbsp;下一章&nbsp;&nbsp;&nbsp;&nbsp;</button></div>
+        </div>
+    {% else %}
+    <p>还没有更新喔.</p>
+    {% endif %}
+</div>
+<div class="go-msg" id="btn_msg">
+    <div class="go-top-wrap" data-toggle="tooltip" data-placement="left" title="评论">
+        <a href="{% url 'novel:comment' book.id content.id %}"><span class="glyphicon glyphicon-comment" aria-hidden="true" style="line-height: 46px;"></span></a>
+    </div>
+</div>
+<div class="go-top" id="btn_top">
+    <div class="go-top-wrap" data-toggle="tooltip" data-placement="left" title="返回顶部">
+        <a href="#"><span class="glyphicon glyphicon-menu-up" aria-hidden="true" style="line-height: 46px;"></span></a>
+    </div>
+</div>
+{% endblock content %}
+
+
+
+{% block myscript %}
+<script type="text/javascript">
+    $(function () {
+        var prev = parseInt({% if content.prev %}{{ content.prev }}{% else %}0{% endif %});
+        var next = parseInt({% if content.next %}{{ content.next }}{% else %}0{% endif %});
+        if (prev == 0) $("#btnprechap").text("没有了");
+        if (next == 0) $("#btnnextchap").text("没有了");
+    })
+    $("#btn_top").hide();         //刚进入页面时设置为隐藏
+    $("#btn_top").click(function () {     //单击时返回顶部
+        $('html, body').animate({ scrollTop: 0 }, 600); //return false;
+    });
+    $(window).bind('scroll resize', function () {   //判断页面所在的位置，小于300就隐藏，否则就显示
+        if ($(window).scrollTop() <= 300) {
+            $("#btn_top").hide();
+        } else {
+            $("#btn_top").show();
+        }
+    });
+    $("#btnprechap").click(function () {
+        var prev = parseInt({% if content.prev %}{{ content.prev }}{% else %}0{% endif %});
+        if (prev != 0)
+            window.location.href = "/novel/{{ content.id_name }}/"+prev;
+
+    })
+    $("#btnnextchap").click(function () {
+        var next = parseInt({% if content.next %}{{ content.next }}{% else %}0{% endif %});
+        if (next != 0)
+            window.location.href = "/novel/{{ content.id_name }}/"+next;
+
+    })
+    $("#btnmenu").click(function () {
+        window.location.href = "{% url 'novel:chapterlist' content.id_name %}";
+    })
+</script>
+{% endblock myscript %}

@@ -1,0 +1,392 @@
+﻿{% extends "./base.html" %}
+{% load myfilter %}
+{% load static %}
+
+{% block mystyle %}
+<style type="text/css">
+    body {
+        background-color: #fff;
+    }
+    .lang {
+        font-family: FZZCYSK;
+        font-weight: 400;
+    }
+
+    h3.wrap-title {
+        border-bottom: 1px solid #666;
+    }
+
+    .myrow {
+        height: 32px;
+        display: flex;
+        align-items: center;
+    }
+
+        .myrow a {
+            border-top: 1px solid #e6e6e6;
+            width: 100%;
+        }
+
+    .label {
+        padding: .2em .4em .2em;
+        min-width: 18px;
+    }
+</style>
+{% endblock mystyle %}
+{% block content %}
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+        <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+        <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox" style="text-align:-webkit-center">
+        <div class="item active">
+            <a href="{{ lb1.url }}">
+                <img src="{{ lb1.value }}" alt="..." class="img-responsive center-block">
+                <div class="carousel-caption">
+                    ...
+                </div>
+            </a>
+        </div>
+        <div class="item">
+            <a href="{{ lb2.url }}">
+                <img src="{{ lb2.value }}" alt="..." class="img-responsive center-block">
+                <div class="carousel-caption">
+                    ...
+                </div>
+            </a>
+        </div>
+        <div class="item">
+            <a href="{{ lb3.url }}">
+                <img src="{{ lb3.value }}" alt="..." class="img-responsive center-block">
+                <div class="carousel-caption">
+                    ...
+                </div>
+            </a>
+        </div>
+        <div class="item">
+            <a href="{{ lb4.url }}">
+                <img src="{{ lb4.value }}" alt="..." class="img-responsive center-block">
+                <div class="carousel-caption">
+                    ...
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+<!-- rank -->
+<div class="row" style="background-color: #fff;">
+    <div class="col-md-3">
+        {% if allrank %}
+        <h3 class="wrap-title lang">点击总榜</h3>
+        <ul>
+            {% for novel in allrank %}
+            {% if forloop.counter > 1 %}
+            <li class="myrow">
+                {% if forloop.counter > 3 %}<span class="label label-default">{{ forloop.counter }}</span>
+                {% else %}<span class="label label-{% cycle 'warning' 'info' %}">{{ forloop.counter }}</span>
+                {% endif %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="margin-left:12px;">
+                    {{ novel.xs_name }}
+                    <span style="float:right;color:gray;margin-right:10px">{{novel.allrank}}</span>
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <span class="label label-danger">No.{{ forloop.counter }}</span>
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="margin-left:12px;">
+                    {{ novel.xs_name }}
+                    <span style="float:right;color:gray;margin-right:10px">{{novel.allrank}}点击量</span>
+                    <br /><span style="color:gray;margin-left:50px;">{{novel.category}} · {{novel.xs_author}}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No novel are available.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if monthrank %}
+        <h3 class="wrap-title lang">点击月榜</h3>
+        <ul>
+            {% for novel in monthrank %}
+            {% if forloop.counter > 1 %}
+            <li class="myrow">
+                {% if forloop.counter > 3 %}<span class="label label-default">{{ forloop.counter }}</span>
+                {% else %}<span class="label label-{% cycle 'warning' 'info' %}">{{ forloop.counter }}</span>
+                {% endif %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="margin-left:12px;">
+                    {{ novel.xs_name }}
+                    <span style="float:right;color:gray;margin-right:10px">{{novel.monthrank}}</span>
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <span class="label label-danger">No.{{ forloop.counter }}</span>
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="margin-left:12px;">
+                    {{ novel.xs_name }}
+                    <span style="float:right;color:gray;margin-right:10px">{{novel.monthrank}}点击量</span>
+                    <br /><span style="color:gray;margin-left:50px;">{{novel.category}} · {{novel.xs_author}}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No novel are available.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if weekrank %}
+        <h3 class="wrap-title lang">点击周榜</h3>
+        <ul>
+            {% for novel in weekrank %}
+            {% if forloop.counter > 1 %}
+            <li class="myrow">
+                {% if forloop.counter > 3 %}<span class="label label-default">{{ forloop.counter }}</span>
+                {% else %}<span class="label label-{% cycle 'warning' 'info' %}">{{ forloop.counter }}</span>
+                {% endif %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="margin-left:12px;">
+                    {{ novel.xs_name }}
+                    <span style="float:right;color:gray;margin-right:10px">{{novel.weekrank}}</span>
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <span class="label label-danger">No.{{ forloop.counter }}</span>
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="margin-left:12px;">
+                    {{ novel.xs_name }}
+                    <span style="float:right;color:gray;margin-right:10px">{{novel.weekrank}}点击量</span>
+                    <br /><span style="color:gray;margin-left:50px;">{{novel.category}} · {{novel.xs_author}}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No novel are available.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if nbookrank %}
+        <h3 class="wrap-title lang">新书榜</h3>
+        <ul>
+            {% for novel in nbookrank %}
+            {% if forloop.counter > 1 %}
+            <li class="myrow">
+                {% if forloop.counter > 3 %}<span class="label label-default">{{ forloop.counter }}</span>
+                {% else %}<span class="label label-{% cycle 'warning' 'info' %}">{{ forloop.counter }}</span>
+                {% endif %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="margin-left:12px;">
+                    {{ novel.xs_name }}
+
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <span class="label label-danger">No.{{ forloop.counter }}</span>
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="margin-left:12px;">
+                    {{ novel.xs_name }}
+
+                    <br /><span style="color:gray;margin-left:50px;">{{novel.category}} · {{novel.xs_author}}</span>
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No novel are available.</p>
+        {% endif %}
+    </div>
+</div>
+<!-- /rank -->
+<!-- ad -->
+<div class="row" style="background-color: #fff;">
+    <a href="{{ ad1.url }}">
+        <img src="{{ ad1.value }}" style="width:100%;display:inline;" />
+    </a>
+</div>
+<!-- /ad -->
+<!-- classify -->
+<div class="row" style="background-color: #fff;">
+    <div class="col-md-3">
+        {% if xuanhuan %}
+        <h3 class="wrap-title lang"><a href="{% url 'novel:morenovel' %}?ctg=玄幻魔法">玄幻魔法</a></h3>
+        <ul>
+            {% for novel in xuanhuan %}
+            <li class="myrow">
+                <a href="{% url 'novel:morenovel' %}?ctg={{novel.category}}" style="color:gray;font-size:14px;width:36%;">「玄幻」</a>
+                {% if forloop.counter > 1 %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;">{{ novel.xs_name }}</a>
+                {% else %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;border:0px">{{ novel.xs_name }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>尚未更新.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if yanqing %}
+        <h3 class="wrap-title lang"><a href="{% url 'novel:morenovel' %}?ctg=都市言情">都市言情</a></h3>
+        <ul>
+            {% for novel in yanqing %}
+            <li class="myrow">
+                <a href="{% url 'novel:morenovel' %}?ctg={{novel.category}}" style="color:gray;font-size:14px;width:36%;">「都市」</a>
+                {% if forloop.counter > 1 %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;">{{ novel.xs_name }}</a>
+                {% else %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;border:0px">{{ novel.xs_name }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>尚未更新.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if kehuan %}
+        <h3 class="wrap-title lang"><a href="{% url 'novel:morenovel' %}?ctg=科幻小说">科幻</a></h3>
+        <ul>
+            {% for novel in kehuan %}
+            <li class="myrow">
+                <a href="{% url 'novel:morenovel' %}?ctg={{novel.category}}" style="color:gray;font-size:14px;width:36%;">「科幻」</a>
+                {% if forloop.counter > 1 %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;">{{ novel.xs_name }}</a>
+                {% else %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;border:0px">{{ novel.xs_name }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>尚未更新.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if kongbu %}
+        <h3 class="wrap-title lang"><a href="{% url 'novel:morenovel' %}?ctg=灵异恐怖">灵异恐怖</a></h3>
+        <ul>
+            {% for novel in kongbu %}
+            <li class="myrow">
+                <a href="{% url 'novel:morenovel' %}?ctg={{novel.category}}" style="color:gray;font-size:14px;width:36%;">「灵异」</a>
+                {% if forloop.counter > 1 %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;">{{ novel.xs_name }}</a>
+                {% else %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;border:0px">{{ novel.xs_name }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>尚未更新.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if lishi %}
+        <h3 class="wrap-title lang"><a href="{% url 'novel:morenovel' %}?ctg=历史军事">历史军事</a></h3>
+        <ul>
+            {% for novel in lishi %}
+            <li class="myrow">
+                <a href="{% url 'novel:morenovel' %}?ctg={{novel.category}}" style="color:gray;font-size:14px;width:36%;">「历史」</a>
+                {% if forloop.counter > 1 %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;">{{ novel.xs_name }}</a>
+                {% else %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;border:0px">{{ novel.xs_name }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>尚未更新.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if zhentan %}
+        <h3 class="wrap-title lang"><a href="{% url 'novel:morenovel' %}?ctg=侦探推理">侦探推理</a></h3>
+        <ul>
+            {% for novel in zhentan %}
+            <li class="myrow">
+                <a href="{% url 'novel:morenovel' %}?ctg={{novel.category}}" style="color:gray;font-size:14px;width:36%;">「侦探」</a>
+                {% if forloop.counter > 1 %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;">{{ novel.xs_name }}</a>
+                {% else %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;border:0px">{{ novel.xs_name }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>尚未更新.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if wangyou %}
+        <h3 class="wrap-title lang"><a href="{% url 'novel:morenovel' %}?ctg=网游动漫">网游动漫</a></h3>
+        <ul>
+            {% for novel in wangyou %}
+            <li class="myrow">
+                <a href="{% url 'novel:morenovel' %}?ctg={{novel.category}}" style="color:gray;font-size:14px;width:36%;">「网游」</a>
+                {% if forloop.counter > 1 %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;">{{ novel.xs_name }}</a>
+                {% else %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;border:0px">{{ novel.xs_name }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>尚未更新.</p>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        {% if qita %}
+        <h3 class="wrap-title lang"><a href="{% url 'novel:morenovel' %}?ctg=其他类型">其他类型</a></h3>
+        <ul>
+            {% for novel in qita %}
+            <li class="myrow">
+                <a href="{% url 'novel:morenovel' %}?ctg={{novel.category}}" style="color:gray;font-size:14px;width:36%;">「其他」</a>
+                {% if forloop.counter > 1 %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;">{{ novel.xs_name }}</a>
+                {% else %}
+                <a href="{% url 'novel:chapterlist' novel.name_id %}" style="width:64%;border:0px">{{ novel.xs_name }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>尚未更新.</p>
+        {% endif %}
+    </div>
+</div>
+<!-- /classify -->
+<!-- ad -->
+<div class="row" style="background-color: #fff;">
+    <a href="{{ ad2.url }}">
+        <img src="{{ ad2.value }}" style="width:100%;display:inline;" />
+    </a>
+</div>
+<!-- /ad -->
+
+{% endblock %}
+

@@ -1,0 +1,33 @@
+/*
+Error: Invalid CSS after "a ": expected selector or at-rule, was "{"
+        on line 3 of chapter.scss
+
+1: @import "bootstrap"
+2: 
+3: a {
+4:     text-decoration: none;
+5:     color: #262626;
+6:     outline: 0;
+7: }
+8: .row-3 {
+
+Backtrace:
+chapter.scss:3
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/scss/parser.rb:1278:in `expected'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/scss/parser.rb:1208:in `expected'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/scss/parser.rb:42:in `parse'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/engine.rb:414:in `_to_tree'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/engine.rb:389:in `_render_with_sourcemap'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/engine.rb:307:in `render_with_sourcemap'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/exec/sass_scss.rb:391:in `run'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/exec/sass_scss.rb:63:in `process_result'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/exec/base.rb:52:in `parse'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/lib/sass/exec/base.rb:19:in `parse!'
+C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/sass-3.5.5/bin/sass:13:in `<top (required)>'
+C:/Ruby25-x64/bin/sass:23:in `load'
+C:/Ruby25-x64/bin/sass:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Invalid CSS after \"a \": expected selector or at-rule, was \"{\"\A         on line 3 of chapter.scss\A \A 1: @import \"bootstrap\"\A 2: \A 3: a {\A 4:     text-decoration: none;\A 5:     color: #262626;\A 6:     outline: 0;\A 7: }\A 8: .row-3 {"; }
